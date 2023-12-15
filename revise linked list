@@ -1,0 +1,213 @@
+#include<bits/stdc++.h>
+using namespace std;
+struct Node{
+    int data;
+    Node* next;
+    Node(int x)
+    {
+     data=x;
+     next=NULL;
+    }
+};
+    
+Node *createlinkedlist(const vector<int>&arr){
+    Node* head=NULL;
+    Node* current=NULL;
+    for(int i=0;i<arr.size();i++)
+    {
+        Node* newNode=new Node(arr[i]);
+        if(head==NULL){
+            head=current=newNode;
+        }
+        else{
+            current->next=newNode;
+            current=newNode;
+        }
+    }
+    return head;
+}
+///////////////////////////////////////////////////function to insert node at the begining of a linked list/////////////////////////////////////////////////////////////////////////////
+Node* insertnode(int value,Node* head)
+{
+    Node* newNode=new Node(value);
+    if(head==NULL)
+    {
+        head=newNode;
+    }
+    else{
+        Node* temp=head;
+        newNode->next=head;
+        head=newNode;
+    }
+    return head;
+}
+Node* insertatend(int value,Node* head)
+{
+Node*temp=head;
+while(temp->next!=NULL)
+{
+    temp=temp->next;
+}
+Node* newNode=new Node(value);
+temp->next=newNode;
+return head;
+}
+////////////////////////////////////////////////delete last node form a linked list/////////////////////////////////////////////////////////////////////////
+Node* deletelastnode(Node* head)
+{
+    Node* temp1=head;
+    while(temp1->next->next!=NULL)
+    {
+        temp1=temp1->next;
+    }
+    Node* temp2=temp1->next;
+    delete temp2;
+    temp1->next=NULL;
+    return head;
+}
+/////////////////////////////////////////////////////////middle of linked list//////////////////////////////////////////////////////////////////////////////
+Node* findmiddle(Node* head){
+    Node *slow=head;
+    Node *fast=head;
+    while(fast!=NULL && fast->next!=NULL)
+    {
+        slow=slow->next;
+        fast=fast->next->next;
+    }
+    return slow;
+}
+//////////////////REVERSE A LINKED LIST///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Node* reverselist(Node* head)
+{
+    Node* current=head;
+    Node* previous=NULL;
+    while(current!=NULL)
+    {
+        Node* nextnode=current->next;
+        current->next=previous;
+        previous=current;
+        current=nextnode;
+    }
+    return previous;
+}
+////////////////////////////////////////DETECT LOOP IN LINKED LIST////////////////////////////////////////////////////////////////////////////////////////////
+bool detectloop(Node* head)
+{
+    Node* temp=head;
+    map<Node*,int>mp;
+    while(temp!=NULL)
+    {
+        if(mp.find(temp)!=mp.end())
+        {
+            return true;
+        }
+        mp[temp]=1;
+        temp=temp->next;
+
+    }
+    return false;
+}
+/// //////////////////////////////////////DETECT LOOP OPTIMAL METHOD//////////////////////////////////////////////////////////////////////////
+bool detectloopoptimal(Node* head)
+{
+    Node* slow=head;
+    Node* fast=head;                                                           //////distance between fast and slow is d then it gets reduced by d-1 for every iteration
+                                                                               /////that's why the slow and fast collides at a point.
+    while(fast!=NULL && fast->next!=NULL)
+    {
+      slow=slow->next;
+      fast=fast->next->next;
+      if(slow==fast)return true;
+    }
+    return false;
+}
+/////////////////////////////////////DETECT STARTING POINT IN A LINKED LIST////////////////////////////////////////////////////////////////////
+Node* detectstarting(Node* head)
+{
+    Node* temp=head;
+    map<Node*,int>mp;
+    while(temp!=NULL){
+        if(mp.find(temp)!=mp.end())
+        {
+             return temp;
+        }
+        mp[temp]=1;
+        temp=temp->next;
+
+    }
+    return NULL;
+}
+///////////////////////////////////////////LENGTH OF THE LOOP///////////////////////////////////////////////////////////////////////////////////////////
+int findlength(Node* head)
+{
+    Node* temp=head;
+    map<Node*,int>mp;
+    int counter=0;
+    while (temp!=NULL)
+    {
+        if(mp.find(temp)!=mp.end())
+        {
+            int value=mp[temp];
+            return(counter-value);
+        }
+        mp[temp]=1;
+        counter++;
+        temp=temp->next;
+    }
+    return 0;
+    
+}
+///////////////////////////////////////////////////LENGTH OF LOOP BY OPTIMAL SLOW AND FAST POINTER/////////////////////////////////////////////////////////////
+int findlength(Node* slow,Node*fast)
+{
+    int counter=1;
+    fast=fast->next;
+    {
+        while(slow!=fast)
+        {
+            counter++;
+            fast=fast->next;
+        }
+    }
+    return counter;
+}
+int lenghtofloop(Node* head)
+{
+    Node* slow=head;
+    Node* fast=head;
+    int length=0;
+    while(fast!=NULL && fast->next!=NULL)
+    {
+        slow=slow->next;
+        fast=fast->next->next;
+        if(slow==fast)
+        {
+             return findlength(slow,fast);
+        }
+    }
+    return 0;
+}
+void printlist(Node* head){
+    Node* temp=head;
+    while(temp!=NULL)
+    {
+        cout<<temp->data<<"-> ";
+        temp=temp->next;
+    }
+}
+int main(){
+    
+vector<int>arr={1,2,3,4,5};
+Node *head=createlinkedlist(arr);
+// head=insertnode(8,head);
+// head=insertatend(-1,head);
+// head=deletelastnode(head);
+// cout<<detectloop(head);
+// cout<<detectloopoptimal(head);
+// head=reverselist(head);
+head=detectstarting(head);
+// cout<<"Linked list:";
+
+printlist(head);
+return 0;
+}
